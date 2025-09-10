@@ -14,13 +14,10 @@ const span = document.querySelector("span");
 const message = document.querySelector(".message");
 // Hidden button that will appear prompting the player to play again
 const playAgainButton = document.querySelector(".play-again");
-
 // Starting word to test game
 let word = "magnolia";
-
 // Array to contain all the letters the player guesses
 const guessedLetters = [];
-
 // Maximum number of guesses the player can make
 let remainingGuesses = 8;
 
@@ -30,13 +27,17 @@ const getWord = async function () {
         fetch("https://gist.githubusercontent.com/skillcrush-curriculum/7061f1d4d3d5bfe47efbfbcfe42bf57e/raw/5ffc447694486e7dea686f34a6c085ae371b43fe/words.txt")
     const words = await res.text();
     const wordArray = words.split("\n");
-    console.log(wordArray);
+    // console.log(wordArray);
 
     // Use random word
     const randomIndex = Math.floor(Math.random() * wordArray.length);
-    word = wordArray[randomIndex];
+    // word = "cat"; // ### ###
+    word = wordArray[randomIndex].trim();
     placeholders(word);
 };
+
+// Get random word
+getWord ();
 
 // Function to add placeholders for each letter
 const placeholders = function (guessWord) {
@@ -48,25 +49,14 @@ const placeholders = function (guessWord) {
     wordInProgress.innerText = placeholderArr.join("");
 };
 
-// Get random word
-getWord ();
-
 // Event listener for Guess button
 guessButton.addEventListener("click", function (e) {
     // Prevent default action of form submitting, then reloading page
     e.preventDefault();
-
-    // Inside the event handler function for the Guess button,
-    // empty the text of the message element.
+    // Empty the text of the message element.
     message.innerText = "";
-    
     // Variable to capture the value of the input
     inputValue = input.value;
-    // console.log(inputValue);
-
-    // Clear value of input
-    input.value = "";
-    // inputValue = input.value;
     // console.log(inputValue);
 
     // At the bottom of the event handler, call the function you 
@@ -86,6 +76,8 @@ guessButton.addEventListener("click", function (e) {
         // console.log(`validatedInput: ${validatedInput}`);
         makeGuess(validatedInput);
     }     
+    // Clear value of input
+    input.value = "";
 });
 
 // Validate player's input
@@ -112,7 +104,7 @@ const showGuessedLetters = function () {
 
     // Create a new list item for each letter inside 
     // guessedLetters array and add it to the unordered list
-    for (letter of guessedLetters) {
+    for (const letter of guessedLetters) {
         const listItem = document.createElement("li");
         listItem.innerText = letter;
         guessedLettersElement.append(listItem);
@@ -141,6 +133,9 @@ const updateWordInProgress = function (guessedLetters) {
         }
     }
     wordInProgress.innerText = showWord.join("");
+        
+    // See if player won 
+    checkForWin(); 
 };
 
 // function to capture input
@@ -157,8 +152,6 @@ const makeGuess = function (letter) {
         countRemainingGuesses(letter);
         updateWordInProgress(guessedLetters);
 
-        // See if player won 
-        checkForWin(); 
     }
     // console.log(`Guessed letters: ${guessedLetters}`);
     // console.log(`Word in progress: ${wordInProgress}`);
@@ -179,7 +172,11 @@ const countRemainingGuesses = function (guess) {
     // Show how many guesses remain
     if (!remainingGuesses) { 
         remaining.innerText = "";
-        message.innerText = `### GAME OVER ###\nThe word is ${wordUpper}`;
+        message.innerText = 
+            `### GAME OVER ###\n The word is ${wordUpper}`;
+
+        // Ask player to play again
+        startOver();
     } else if (remainingGuesses == 1) {
         // remaining.innerText = "";
         span.innerText = `one guess`;
@@ -192,13 +189,54 @@ const countRemainingGuesses = function (guess) {
 // Check if player guessed the word and won game
 const checkForWin = function () {    
     // Check if word in progress matches word to be guessed
-    // console.log(`Word in progress: ${wordInProgress.innerText}`);
-    // console.log(`Word: ${word.toUpperCase()}`);
     if (wordInProgress.innerText === word.toUpperCase()) {
         // console.log("### We have a winner! ###");
         message.classList.add("win");
-        message.innerHTML = "";
+        // message.innerHTML = "";
         message.innerHTML = '<p class="highlight">You guessed ' +
             'the correct word! Congrats!</p>';
+        
+        // Ask player to play again
+        startOver();
     }
 };
+
+const startOver = function () {
+    // Hide Guess button
+    guessButton.classList.add("hide");
+    // Hide paragraph which displays remaining guesses
+    remaining.classList.add("hide");
+    // Hide unordered list where guessed letters apppear
+    guessedLettersElement.classList.add("hide");
+    // Show the button to play again
+    playAgainButton.classList.remove("hide");
+}
+
+// Event listener for Play Again button
+playAgainButton.addEventListener("click", function () {
+    // Remove the class of “win” applied to the message element.
+    message.classList.remove("win"); 
+    // Empty the message text and the unordered list where the guessed 
+    // letters appear.
+    message.innerText = "";
+    guessedLettersElement.innerHTML = "";
+    // Set the remaining guess back to 8 or whichever number of guesses 
+    // you decided on.
+    remainingGuesses = 8; 
+    // Set guessedLetter global variable back to an empty array.
+    guessedLetters = [];
+    // Populate the text of the span inside the paragraph where the 
+    // remaining guesses display with the new amount of guesses.
+    span.innerText = `${remainingGuesses} guesses`;
+ 
+    // Call getWord() async function that pulls new word so player can 
+    // play again
+    getWord();
+    
+    // Show the Guess button, the paragraph with remaining guesses, 
+    // and the guessed letters once more. Hide the Play Again button.
+    guessButton.classList.remove("hide");
+    playAgainButton.classList.add("hide");
+    remaining.classList.remove("hide");
+    guessedLettersElement.classList.remove("hide");
+});
