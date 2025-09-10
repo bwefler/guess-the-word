@@ -14,12 +14,18 @@ const span = document.querySelector("span");
 const message = document.querySelector(".message");
 // Hidden button that will appear prompting the player to play again
 const playAgainButton = document.querySelector(".play-again");
+
 // Starting word to test game
 let word = "magnolia";
 // Array to contain all the letters the player guesses
-const guessedLetters = [];
+let guessedLetters = [];
 // Maximum number of guesses the player can make
 let remainingGuesses = 8;
+
+// ### Joke button and joke ###
+const jokeButton = document.querySelector(".joke-button");
+const jokeElement = document.querySelector(".joke");
+let joke = "";
 
 // Fetch data from a remote file
 const getWord = async function () {
@@ -31,7 +37,6 @@ const getWord = async function () {
 
     // Use random word
     const randomIndex = Math.floor(Math.random() * wordArray.length);
-    // word = "cat"; // ### ###
     word = wordArray[randomIndex].trim();
     placeholders(word);
 };
@@ -58,20 +63,10 @@ guessButton.addEventListener("click", function (e) {
     // Variable to capture the value of the input
     inputValue = input.value;
     // console.log(inputValue);
-
-    // At the bottom of the event handler, call the function you 
-    // made that checks the input, and pass it the input value as 
-    // an argument. 
-    // Save the result of this function call to a variable and 
-    // log it out to the console.
+    // Check input
     const validatedInput = validateInput(inputValue);
-    //   console.log(`validatedInput: ${validatedInput}`);
-
-    // Make sure that the variable mapped to the result of the 
-    // function validates that the player’s input is returning a 
-    // letter (as opposed to “undefined”). 
-    // If it’s returning a letter, pass it as an argument to your 
-    // makeGuess function.
+    // console.log(`validatedInput: ${validatedInput}`);
+    // If it’s a letter, use it to guess
     if (validatedInput) {
         // console.log(`validatedInput: ${validatedInput}`);
         makeGuess(validatedInput);
@@ -210,7 +205,7 @@ const startOver = function () {
     guessedLettersElement.classList.add("hide");
     // Show the button to play again
     playAgainButton.classList.remove("hide");
-}
+};
 
 // Event listener for Play Again button
 playAgainButton.addEventListener("click", function () {
@@ -225,12 +220,10 @@ playAgainButton.addEventListener("click", function () {
     remainingGuesses = 8; 
     // Set guessedLetter global variable back to an empty array.
     guessedLetters = [];
-    // Populate the text of the span inside the paragraph where the 
-    // remaining guesses display with the new amount of guesses.
+    // Populate the span text with the new amount of guesses.
     span.innerText = `${remainingGuesses} guesses`;
  
-    // Call getWord() async function that pulls new word so player can 
-    // play again
+    // Play again
     getWord();
     
     // Show the Guess button, the paragraph with remaining guesses, 
@@ -239,4 +232,25 @@ playAgainButton.addEventListener("click", function () {
     playAgainButton.classList.add("hide");
     remaining.classList.remove("hide");
     guessedLettersElement.classList.remove("hide");
+});
+
+// ### Fetch random joke ###
+const getJoke = async function () {
+    const response = await fetch("https://icanhazdadjoke.com/", {
+        headers: {
+            Accept: "application/json"
+        }
+  });
+  const data = await response.json();
+  return data.joke;
+};
+
+// ### Event handler for joke button ###
+jokeButton.addEventListener("click", async function () {
+    // Fetch & display random joke
+    joke = await getJoke();
+    // console.log(joke);
+    jokeElement.innerText = joke;
+    // More pun-ishment?
+    jokeButton.innerText = "Tell me another joke!"
 });

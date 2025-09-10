@@ -110,7 +110,8 @@ input:focus {
 }
 
 .guess,
-.play-again {
+.play-again,
+.joke-button {
   padding: 1em 3em;
   border-radius: 50px;
   margin-top: 1em;
@@ -135,12 +136,17 @@ input:focus {
   color: white;
 }
 
-/* animatied background */
+/* animated background */
 .win {
   padding: 0 1em;
   background: linear-gradient(-45deg, #ff9d64, #f5620c);
   background-size: 400% 400%;
   animation: gradient 2s ease infinite;
+}
+
+/* ### Added joke message ### */
+.joke {
+  text-align: center;
 }
 
 @keyframes gradient {
