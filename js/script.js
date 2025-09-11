@@ -19,13 +19,26 @@ const playAgainButton = document.querySelector(".play-again");
 let word = "magnolia";
 // Array to contain all the letters the player guesses
 let guessedLetters = [];
-// Maximum number of guesses the player can make
-let remainingGuesses = 8;
 
 // ### Joke button and joke ###
 const jokeButton = document.querySelector(".joke-button");
 const jokeElement = document.querySelector(".joke");
-let joke = "";
+// ### Starting joke to test feature ###
+let joke = `A man walks into a bar and says "Ow!"`;
+
+// Function to give random number of guesses between 5 and 10
+const numberOfGuesses = function () {
+    let random = Math.floor(5 * Math.random());
+    // console.log(`Random = ${random}`);
+    let numGuesses = 10 - (random);
+    // console.log(`${numGuesses} guesses`);
+    return numGuesses;
+};
+
+// Maximum number of guesses the player can make
+// let remainingGuesses = 8;
+let remainingGuesses = numberOfGuesses();
+span.innerText = `${remainingGuesses} guesses`;
 
 // Fetch data from a remote file
 const getWord = async function () {
@@ -160,7 +173,8 @@ const countRemainingGuesses = function (guess) {
     } else {
         message.innerText = "The word does not contain that letter."
 
-        // The number of guesses only updates when player makes wrong guess.
+        // The number of guesses only updates when player makes 
+        // wrong guess.
         remainingGuesses--;
     }
 
@@ -169,14 +183,11 @@ const countRemainingGuesses = function (guess) {
         remaining.innerText = "";
         message.innerText = 
             `### GAME OVER ###\n The word is ${wordUpper}`;
-
         // Ask player to play again
         startOver();
     } else if (remainingGuesses == 1) {
-        // remaining.innerText = "";
-        span.innerText = `one guess`;
+        span.innerText = `only one guess`;
     } else {
-        // remaining.innerText = "";
         span.innerText = `${remainingGuesses} guesses`
     }
 };
@@ -217,7 +228,7 @@ playAgainButton.addEventListener("click", function () {
     guessedLettersElement.innerHTML = "";
     // Set the remaining guess back to 8 or whichever number of guesses 
     // you decided on.
-    remainingGuesses = 8; 
+    remainingGuesses = numberOfGuesses(); 
     // Set guessedLetter global variable back to an empty array.
     guessedLetters = [];
     // Populate the span text with the new amount of guesses.
