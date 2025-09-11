@@ -126,14 +126,20 @@ input:focus {
 
 .guess:active,
 .play-again:active,
+.joke-button:active,
 .guess:focus,
 .play-again:focus,
+.joke-button:focus,
 .guess:hover,
-.play-again:hover {
+.play-again:hover,
+.joke-button:hover {
   outline: 0;
   transform: scale(0.98);
-  filter: brightness(0.9);
-  color: white;
+  /* filter: brightness(0.9); */
+  /* color: white; */
+  color: #D64000;
+  text-decoration: underline;
+  text-decoration-color: #f37945;
 }
 
 /* animated background */
