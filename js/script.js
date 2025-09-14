@@ -9,14 +9,19 @@ const wordInProgress = document.querySelector(".word-in-progress");
 // Paragraph where remaining guesses display
 const remaining = document.querySelector(".remaining");
 // Span inside paragraph where remaining guesses display
-const span = document.querySelector("span");
+const remainingGuessesSpan = document.querySelector("span");
 // Empty paragraph where messages appear when player guesses a letter
 const message = document.querySelector(".message");
 // Hidden button that will appear prompting the player to play again
 const playAgainButton = document.querySelector(".play-again");
 
+// Form to input guessed letters
+const guessForm = document.querySelector(".guess-form");
+
 // Starting word to test game
 let word = "magnolia";
+// let word = "cat"; // ###
+
 // Array to contain all the letters the player guesses
 let guessedLetters = [];
 
@@ -29,16 +34,17 @@ let joke = `A man walks into a bar and says "Ow!"`;
 // Function to give random number of guesses between 5 and 10
 const numberOfGuesses = function () {
     let random = Math.floor(5 * Math.random());
-    // console.log(`Random = ${random}`);
+    console.log(`Random = ${random}`);
     let numGuesses = 10 - (random);
-    // console.log(`${numGuesses} guesses`);
+    console.log(`${numGuesses} guesses`);
     return numGuesses;
 };
 
 // Maximum number of guesses the player can make
 // let remainingGuesses = 8;
 let remainingGuesses = numberOfGuesses();
-span.innerText = `${remainingGuesses} guesses`;
+remainingGuessesSpan.innerText = "";
+remainingGuessesSpan.innerText = `${remainingGuesses} guesses`;
 
 // Fetch data from a remote file
 const getWord = async function () {
@@ -51,6 +57,7 @@ const getWord = async function () {
     // Use random word
     const randomIndex = Math.floor(Math.random() * wordArray.length);
     word = wordArray[randomIndex].trim();
+    // word = "red"; // ###
     placeholders(word);
 };
 
@@ -180,15 +187,15 @@ const countRemainingGuesses = function (guess) {
 
     // Show how many guesses remain
     if (!remainingGuesses) { 
-        remaining.innerText = "";
+        // remaining.innerText = ""; // ###
         message.innerText = 
             `### GAME OVER ###\n The word is ${wordUpper}`;
         // Ask player to play again
         startOver();
     } else if (remainingGuesses == 1) {
-        span.innerText = `only one guess`;
+        remainingGuessesSpan.innerText = `only one guess`;
     } else {
-        span.innerText = `${remainingGuesses} guesses`
+        remainingGuessesSpan.innerText = `${remainingGuesses} guesses`
     }
 };
 
@@ -216,23 +223,32 @@ const startOver = function () {
     guessedLettersElement.classList.add("hide");
     // Show the button to play again
     playAgainButton.classList.remove("hide");
+
+    // Hide guess form
+    guessForm.classList.add("hide");
 };
 
 // Event listener for Play Again button
-playAgainButton.addEventListener("click", function () {
+playAgainButton.addEventListener("click", function (e) {
+    console.log("Playing again")
+    // Prevent default action of form submitting, then reloading page
+    e.preventDefault();
     // Remove the class of “win” applied to the message element.
     message.classList.remove("win"); 
     // Empty the message text and the unordered list where the guessed 
     // letters appear.
     message.innerText = "";
     guessedLettersElement.innerHTML = "";
-    // Set the remaining guess back to 8 or whichever number of guesses 
+    // Set the remaining guess back to whichever number of guesses 
     // you decided on.
-    remainingGuesses = numberOfGuesses(); 
+    console.log("Calling numberOfGuesses()");
+    remainingGuesses = numberOfGuesses();
+    console.log(`Number of guesses: ${remainingGuesses}`); 
     // Set guessedLetter global variable back to an empty array.
     guessedLetters = [];
     // Populate the span text with the new amount of guesses.
-    span.innerText = `${remainingGuesses} guesses`;
+    remainingGuessesSpan.innerText = "";
+    remainingGuessesSpan.innerText = `${remainingGuesses} guesses`;
  
     // Play again
     getWord();
@@ -240,9 +256,12 @@ playAgainButton.addEventListener("click", function () {
     // Show the Guess button, the paragraph with remaining guesses, 
     // and the guessed letters once more. Hide the Play Again button.
     guessButton.classList.remove("hide");
-    playAgainButton.classList.add("hide");
     remaining.classList.remove("hide");
     guessedLettersElement.classList.remove("hide");
+    playAgainButton.classList.add("hide");
+
+    // Show guess form
+    guessForm.classList.remove("hide");
 });
 
 // ### Fetch random joke ###
@@ -257,7 +276,9 @@ const getJoke = async function () {
 };
 
 // ### Event handler for joke button ###
-jokeButton.addEventListener("click", async function () {
+jokeButton.addEventListener("click", async function (e) {
+    // Prevent default action of form submitting, then reloading page
+    e.preventDefault();
     // Fetch & display random joke
     joke = await getJoke();
     // console.log(joke);
