@@ -4,6 +4,8 @@ const guessedLettersElement = document.querySelector(".guessed-letters");
 const guessButton = document.querySelector(".guess");
 // Text input where player guesses a letter
 const input = document.querySelector("input");
+// Label stating "Type one letter:"
+const label = document.querySelector("label");
 // Empty paragraph where word in progress appears
 const wordInProgress = document.querySelector(".word-in-progress");
 // Paragraph where remaining guesses display
@@ -15,12 +17,9 @@ const message = document.querySelector(".message");
 // Hidden button that will appear prompting the player to play again
 const playAgainButton = document.querySelector(".play-again");
 
-// Form to input guessed letters
-const guessForm = document.querySelector(".guess-form");
-
 // Starting word to test game
+// let word = "cat";
 let word = "magnolia";
-// let word = "cat"; // ###
 
 // Array to contain all the letters the player guesses
 let guessedLetters = [];
@@ -41,7 +40,6 @@ const numberOfGuesses = function () {
 };
 
 // Maximum number of guesses the player can make
-// let remainingGuesses = 8;
 let remainingGuesses = numberOfGuesses();
 remainingGuessesSpan.innerText = "";
 remainingGuessesSpan.innerText = `${remainingGuesses} guesses`;
@@ -57,7 +55,7 @@ const getWord = async function () {
     // Use random word
     const randomIndex = Math.floor(Math.random() * wordArray.length);
     word = wordArray[randomIndex].trim();
-    // word = "red"; // ###
+    
     placeholders(word);
 };
 
@@ -224,8 +222,9 @@ const startOver = function () {
     // Show the button to play again
     playAgainButton.classList.remove("hide");
 
-    // Hide guess form
-    guessForm.classList.add("hide");
+    // Hide input and label
+    input.classList.add("hide");
+    label.classList.add("hide");
 };
 
 // Event listener for Play Again button
@@ -260,8 +259,9 @@ playAgainButton.addEventListener("click", function (e) {
     guessedLettersElement.classList.remove("hide");
     playAgainButton.classList.add("hide");
 
-    // Show guess form
-    guessForm.classList.remove("hide");
+    // Show input and label
+    input.classList.remove("hide");
+    label.classList.remove("hide");
 });
 
 // ### Fetch random joke ###
