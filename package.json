@@ -1,0 +1,24 @@
+{
+  "name": "guess-the-word-main",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "gh-pages -d ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bwefler/guess-the-word.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bwefler/guess-the-word/issues"
+  },
+  "homepage": "https://github.com/bwefler/guess-the-word#readme",
+  "dependencies": {
+    "gh-pages": "^6.3.0"
+  }
+}
